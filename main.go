@@ -1,27 +1,27 @@
 package main
 
 import (
-	"github.com/hanjos/nexus"
-	"github.com/hanjos/nexus/credentials"
-	"github.com/hanjos/nexus/search"
-	
-	count "github.com/hanjos/nexus-cli/artifact-count"
+	"sbrubbles.org/go/nexus"
+	"sbrubbles.org/go/nexus/credentials"
+	"sbrubbles.org/go/nexus/search"
+
+	count "sbrubbles.org/go/nexus-cli/artifact-count"
 
 	"github.com/codegangsta/cli"
 
 	"fmt"
-	"reflect"
 	"os"
+	"reflect"
 	"sort"
 )
 
 // FLAGS
-var urlFlag = cli.StringFlag { Name: "url, u", Usage: "Nexus' URL." }
-var repoFlag = cli.StringFlag { Name: "repository, r", Usage: "The repository to inspect." }
+var urlFlag = cli.StringFlag{Name: "url, u", Usage: "Nexus' URL."}
+var repoFlag = cli.StringFlag{Name: "repository, r", Usage: "The repository to inspect."}
 
 // ACTIONS
 func countArtifactsAction(c *cli.Context) {
-	if(len(os.Args) == 0) {
+	if len(os.Args) == 0 {
 		cli.ShowSubcommandHelp(c)
 		return
 	}
@@ -29,7 +29,7 @@ func countArtifactsAction(c *cli.Context) {
 	url := c.String("url")
 	repo := c.String("repository")
 	hasErrors := false
-	
+
 	if repo == "" {
 		hasErrors = true
 		fmt.Println("[ERROR] No repository given!")
@@ -60,7 +60,7 @@ func countArtifactsAction(c *cli.Context) {
 }
 
 func listArtifactsAction(c *cli.Context) {
-	if(len(os.Args) == 0) {
+	if len(os.Args) == 0 {
 		cli.ShowSubcommandHelp(c)
 		return
 	}
@@ -68,7 +68,7 @@ func listArtifactsAction(c *cli.Context) {
 	url := c.String("url")
 	repo := c.String("repository")
 	hasErrors := false
-	
+
 	if repo == "" {
 		hasErrors = true
 		fmt.Println("[ERROR] No repository given!")
@@ -108,11 +108,11 @@ func repoAsSimpleString(r *nexus.Repository) string {
 
 type repoSort []*nexus.Repository
 
-func (rs repoSort) Len() int { return len(rs) }
+func (rs repoSort) Len() int      { return len(rs) }
 func (rs repoSort) Swap(i, j int) { rs[i], rs[j] = rs[j], rs[i] }
 
 // hosted < virtual < proxy
-func (rs repoSort) Less(i, j int) bool { 
+func (rs repoSort) Less(i, j int) bool {
 	a, b := rs[i], rs[j]
 
 	if a.RemoteURI != "" && b.RemoteURI == "" {
@@ -135,13 +135,13 @@ func (rs repoSort) Less(i, j int) bool {
 }
 
 func listReposAction(c *cli.Context) {
-	if(len(os.Args) == 0) {
+	if len(os.Args) == 0 {
 		cli.ShowAppHelp(c)
 		return
 	}
 
 	url := c.String("url")
-	
+
 	if url == "" {
 		fmt.Println("[ERROR] No URL found: use the flag --url")
 		return
@@ -157,7 +157,7 @@ func listReposAction(c *cli.Context) {
 
 	fmt.Printf("%d repositories in %v:\n", len(repos), url)
 	sort.Sort(repoSort(repos))
-	for _, repo := range(repos) {
+	for _, repo := range repos {
 		fmt.Printf("\t%v\n", repoAsSimpleString(repo))
 	}
 }
@@ -169,52 +169,52 @@ func main() {
 	app.Version = "0.1.0"
 	app.Author = "Humberto Anjos"
 	app.Email = "h.anjos@acm.org"
-	app.Commands = []cli.Command {
+	app.Commands = []cli.Command{
 		{
-			Name: "artifacts",
+			Name:      "artifacts",
 			ShortName: "a",
-			Usage: "Commands concerning the artifacts and GAVs in a given repository.",
-			Flags: []cli.Flag{ urlFlag, repoFlag },
-			Subcommands: []cli.Command {
+			Usage:     "Commands concerning the artifacts and GAVs in a given repository.",
+			Flags:     []cli.Flag{urlFlag, repoFlag},
+			Subcommands: []cli.Command{
 				{
-					Name: "count",
+					Name:      "count",
 					ShortName: "c",
-					Usage: "Counts the artifacts and GAVs in a given repository.",
-					Flags: []cli.Flag{ urlFlag, repoFlag },
-					Action: countArtifactsAction,
+					Usage:     "Counts the artifacts and GAVs in a given repository.",
+					Flags:     []cli.Flag{urlFlag, repoFlag},
+					Action:    countArtifactsAction,
 				},
 				{
-					Name: "list",
+					Name:      "list",
 					ShortName: "l",
-					Usage: "Lists the artifacts and GAVs in a given repository.",
-					Flags: []cli.Flag{ urlFlag, repoFlag },
-					Action: listArtifactsAction,
+					Usage:     "Lists the artifacts and GAVs in a given repository.",
+					Flags:     []cli.Flag{urlFlag, repoFlag},
+					Action:    listArtifactsAction,
 				},
 			},
-			Action: func (c *cli.Context) {
+			Action: func(c *cli.Context) {
 				cli.ShowCommandHelp(c, c.Command.Name)
 			},
 		},
 		{
-			Name: "repositories",
+			Name:      "repositories",
 			ShortName: "repos",
-			Usage: "Commands concerning repositories.",
-			Flags: []cli.Flag{ urlFlag },
-			Subcommands: []cli.Command {
+			Usage:     "Commands concerning repositories.",
+			Flags:     []cli.Flag{urlFlag},
+			Subcommands: []cli.Command{
 				{
-					Name: "list",
+					Name:      "list",
 					ShortName: "l",
-					Usage: "Lists the repositories.",
-					Flags: []cli.Flag{ urlFlag },
-					Action: listReposAction,
+					Usage:     "Lists the repositories.",
+					Flags:     []cli.Flag{urlFlag},
+					Action:    listReposAction,
 				},
 			},
-			Action: func (c *cli.Context) {
+			Action: func(c *cli.Context) {
 				cli.ShowSubcommandHelp(c)
 			},
 		},
 	}
-	app.Action = func (c *cli.Context) {
+	app.Action = func(c *cli.Context) {
 		cli.ShowAppHelp(c)
 	}
 

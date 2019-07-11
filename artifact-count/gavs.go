@@ -1,16 +1,16 @@
-package gavs
+package gavs // import "sbrubbles.org/go/nexus-cli/gavs"
 
 import (
-	"github.com/hanjos/nexus"
+	"sbrubbles.org/go/nexus"
 
 	"fmt"
 )
 
 type Gav struct {
-	GroupID string
+	GroupID    string
 	ArtifactID string
-	Version string
-	Artifacts []*nexus.Artifact
+	Version    string
+	Artifacts  []*nexus.Artifact
 }
 
 func newGav(g, a, v string) *Gav {
@@ -31,13 +31,13 @@ func (gav *Gav) String() string {
 
 type gavSet struct {
 	Data []*Gav
-	Map map[string]*Gav
+	Map  map[string]*Gav
 }
 
 func newGavSet() *gavSet {
 	return &gavSet{
 		Data: []*Gav{},
-		Map: map[string]*Gav{},
+		Map:  map[string]*Gav{},
 	}
 }
 
@@ -61,7 +61,7 @@ func (set *gavSet) add(gav *Gav) {
 
 	set.Data = append(set.Data, gav)
 	set.Map[hash] = gav
-} 
+}
 
 func hashFromArtifact(artifact *nexus.Artifact) string {
 	return fmt.Sprintf("%v:%v:%v", artifact.GroupID, artifact.ArtifactID, artifact.Version)
@@ -69,7 +69,7 @@ func hashFromArtifact(artifact *nexus.Artifact) string {
 
 func GavsOf(artifacts []*nexus.Artifact) []*Gav {
 	set := newGavSet()
-	for _, artifact := range(artifacts) {
+	for _, artifact := range artifacts {
 		set.getGavOf(artifact).add(artifact)
 	}
 

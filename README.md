@@ -2,8 +2,8 @@ Runs queries against a Sonatype Nexus instance. Should useful for some quick que
 
 ## Installation
 ```
-go get -u github.com/hanjos/nexus-cli
-go install github.com/hanjos/nexus-cli
+go get -u sbrubbles.org/go/nexus-cli
+go install sbrubbles.org/go/nexus-cli
 ```
 
 If your `$GOPATH/bin` is in your `$PATH`, that's pretty much it :)
