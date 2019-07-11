@@ -5,7 +5,7 @@ import (
 	"sbrubbles.org/go/nexus/credentials"
 	"sbrubbles.org/go/nexus/search"
 
-	count "sbrubbles.org/go/nexus-cli/artifact-count"
+	count "sbrubbles.org/go/nexus-cli/gavs"
 
 	"github.com/codegangsta/cli"
 
